@@ -1,0 +1,6 @@
+[ What ]
+
+A small bloomfilter for golang. This is a negative filter,
+i.e. it can verify quickly with 100% certainty that some
+word (string) is not present, assuming that all words have
+been added to the bloomfilter naturally :-)
