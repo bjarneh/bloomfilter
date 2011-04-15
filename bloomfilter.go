@@ -4,8 +4,39 @@
 
 package bloomfilter
 
-// this is the java.lang.String.hashCode (GPL)
-// override HashFunc for a different hash function
+/*
+  A Bloomfilter is a negative filter which quickly
+  determines whether a word is present in a large set
+  of words, given that all words have been added to the
+  filter.
+
+  Basically it holds a set of boolean values, which may or
+  may not have been hashed to, in a long int-array, where
+  each int, or in this case uint32, holds 32 bits/bools.
+  The larger the bloomfilter, the more accurate it becomes,
+  but it also uses more memory naturally.
+
+  Typical use:
+
+     // size == 10000 -> 320000 boolean values
+
+     filter := bloomfilter.NewSize(10000)
+
+     filter.Add("plenty")
+     filter.Add("of")
+     filter.Add("words")
+
+     if filter.Marked("someword") {
+        println("'someword' may be here")
+     } else {
+        println("'someword' is not present")
+     }
+
+*/
+
+
+// this is the java.lang.String.hashCode()
+// override for a different hash function
 var HashFunc func(string) uint32 = func(s string) uint32 {
     var val uint32 = 1
     for i := 0; i < len(s); i++ {
@@ -29,14 +60,16 @@ type Filter struct {
     hits []uint32
 }
 
+// new filter with default size (640000 booleans, in 20000 uint32)
 func New() *Filter {
-    return &Filter{3200000, make([]uint32, 100000)}
+    return &Filter{640000, make([]uint32, 20000)}
 }
 
 func NewSize(size int) *Filter {
     return &Filter{32 * uint32(size), make([]uint32, size)}
 }
 
+// add word to filter
 func (f *Filter) Add(w string) {
     h := (HashFunc(w) % f.size)
     c := h / 32 // cell
@@ -44,6 +77,7 @@ func (f *Filter) Add(w string) {
     f.hits[c] = f.hits[c] | mask[o]
 }
 
+// if this function returns false, w is not present
 func (f *Filter) Marked(w string) bool {
     h := (HashFunc(w) % f.size)
     c := h / 32 // cell

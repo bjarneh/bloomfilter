@@ -31,3 +31,22 @@ func TestBloomfilter(t *testing.T) {
         }
     }
 }
+
+func BenchmarkBloomfilterHashFunc(b *testing.B) {
+
+    s := "abcdefghijklmnopqrstuvwxyz"
+
+    for i := 0; i < b.N; i++ {
+        _ = HashFunc(s)
+    }
+}
+
+func BenchmarkBuiltInHashFunc(b *testing.B) {
+
+    m := make(map[string]interface{})
+    s := "abcdefghijklmnopqrstuvwxyz"
+
+    for i := 0; i < b.N; i++ {
+        m[s] = nil
+    }
+}
