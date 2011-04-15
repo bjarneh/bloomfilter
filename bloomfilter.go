@@ -50,3 +50,10 @@ func (f *Filter) Marked(w string) bool {
     o := h % 32 // offset
     return (f.hits[c] & mask[o]) > 0
 }
+
+func (f *Filter) Clear() {
+    for i := 0; i < len(f.hits); i++ {
+        f.hits[i] = 0
+    }
+}
+

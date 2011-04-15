@@ -19,7 +19,15 @@ func TestBloomfilter(t *testing.T) {
 
     for i := 0; i < len(words); i++ {
         if ! filter.Marked(words[i]) {
-            t.Fatalf("%s should be marked\n",words[i])
+            t.Fatalf("'%s' should be marked\n",words[i])
+        }
+    }
+
+    filter.Clear()
+
+    for i := 0; i < len(words); i++ {
+        if filter.Marked(words[i]) {
+            t.Fatalf("'%s' shouldn't be marked\n",words[i])
         }
     }
 }
