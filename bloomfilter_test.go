@@ -12,7 +12,7 @@ import(
 var words = []string{"just", "a", "few", "words", "used", "for", "testing"}
 
 func TestBloomfilter(t *testing.T) {
-    filter := New()
+    filter := NewSize(3)
     for i := 0; i < len(words); i++ {
         filter.Add(words[i])
     }

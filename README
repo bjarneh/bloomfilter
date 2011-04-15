@@ -4,3 +4,28 @@ A small bloomfilter for golang. This is a negative filter,
 i.e. it can verify quickly with 100% certainty that some
 word (string) is not present, assuming that all words have
 been added to the bloomfilter naturally :-)
+
+
+[ Install ]
+
+goinstall github.com/bjarneh/bloomfilter
+
+
+[ Example ]
+
+<code>
+
+filter := bloomfilter.New() // or NewSize( size int ) 
+
+filter.Add("plenty")
+filter.Add("of")
+filter.Add("words")
+
+
+if ! filter.Marked("word") {
+    println("'word' is not present")
+} else {
+    println("'word' could be present")
+}
+
+</code>
