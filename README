@@ -1,9 +1,26 @@
 [ What ]
 
 A small bloomfilter for golang. This is a negative filter,
-i.e. it can verify quickly with 100% certainty that some
-word (string) is not present, assuming that all words have
-been added to the bloomfilter naturally :-)
+i.e. it can verify quickly that words (string) are not present,
+in a large set of words, but false positives are possible. 
+Note that the size of the bloomfilter must be adjusted according
+to the size of the input set for this to work. I.e. a bloomfilter 
+of size 1 will not do anything; the size should be at least 5-10 
+times the number of words added to it.
+
+
+[ How ]
+
+A bloomfilter is a large (hopefully) boolean array, where all
+words added get their hash-value marked as 'true', all other
+values in the hash are 'false'. I.e. to figure out whether
+a word has been added to the bloomfilter, all we need to do is
+to calculate the hash-value of the word. If that boolean value
+is 'true', it may be there, if it's 'false' it cannot be there
+since nothing has hashed to that value. The hash-function used
+here is taken from java.lang.String.hashCode(), it is about
+2 times as slow as the built-in hash-function golang uses for
+its hash-maps.
 
 
 [ Install ]
@@ -15,7 +32,7 @@ goinstall github.com/bjarneh/bloomfilter
 
 <code>
 
-filter := bloomfilter.New() // or NewSize( size int ) 
+filter := bloomfilter.New() // or NewSize( int ) 
 
 filter.Add("plenty")
 filter.Add("of")

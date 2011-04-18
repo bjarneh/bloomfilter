@@ -17,8 +17,7 @@ package bloomfilter
   but it also uses more memory naturally.
 
   Typical use:
-
-     // size == 10000 -> 320000 boolean values
+  <pre>
 
      filter := bloomfilter.NewSize(10000)
 
@@ -26,12 +25,13 @@ package bloomfilter
      filter.Add("of")
      filter.Add("words")
 
-     if filter.Marked("someword") {
-        println("'someword' may be here")
-     } else {
+     if ! filter.Marked("someword") {
         println("'someword' is not present")
+     } else {
+        println("'someword' may be here")
      }
 
+   </pre>
 */
 
 
@@ -66,6 +66,11 @@ func New() *Filter {
 }
 
 func NewSize(size int) *Filter {
+    if size > 32 {
+        size = size/32
+    }else{
+        size = 1
+    }
     return &Filter{32 * uint32(size), make([]uint32, size)}
 }
 
